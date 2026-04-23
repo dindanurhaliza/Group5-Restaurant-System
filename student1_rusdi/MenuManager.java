@@ -1,19 +1,7 @@
 package student1_rusdi;
 import java.util.ArrayList;
-// class support soalnya file shared belom jadi hehe
+import shared.MenuItem;
 
-class MenuItem {
-    int id;
-    String name;
-    double price;
-
-    MenuItem(int id, String name, double price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-    }
-
-}
 
 
 public class MenuManager {
@@ -24,7 +12,7 @@ public class MenuManager {
 
     // fungsi utama s1 buat nsmbah menu
     public void tambahMenu(int id, String nama, double price) {
-        MenuItem baru = new MenuItem(id, nama, price);
+        MenuItem baru = new MenuItem(id, nama, "Makanan", price);
         daftarMenu.add(baru);
         System.out.println("berhasil input menu: " + nama);
     }
