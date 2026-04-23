@@ -1,5 +1,5 @@
 package shared;
-<<<<<<< HEAD
+
 public class MenuItem {
     public int id;
     public String name;
