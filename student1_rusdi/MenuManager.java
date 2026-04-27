@@ -33,6 +33,7 @@ public class MenuManager {
         app.tambahMenu(101, "Nasi goreng", 25000);
         app.tambahMenu(102, "ayam bakar ", 32000);
         app.tambahMenu(201, "es jeruk", 5000);
+        app.tambahMenu(113, "kopi", 8000);
 
         // tampilkan hasil 
         app.tampilkanMenu();
