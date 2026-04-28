@@ -24,12 +24,13 @@ Proyek ini adalah sistem manajemen restoran yang dikembangkan menggunakan bahasa
    Jalankan file utama (biasanya memiliki metode `public static void main`) untuk memulai aplikasi.
 
 ## 📂 Struktur Proyek
-* `student1_rusdi/` : Modul untuk fitur [tambahkan fitur spesifik]
-* `Student2_Dzaki/` : Modul untuk fitur [tambahkan fitur spesifik]
-* `student3-ahmad/` : Modul untuk fitur [tambahkan fitur spesifik]
-* `student4_dinda/` : Modul untuk fitur [tambahkan fitur spesifik]
-* `shared/` : Komponen atau library yang digunakan bersama.
-
+Group5-Restaurant-System/
+├── .vscode/             # Konfigurasi workspace dan editor
+├── shared/              # Resource, library, atau kelas yang dipakai bersama
+├── student1_rusdi/      # Modul fitur khusus milik Rusdi
+├── Student2_Dzaki/      # Modul fitur khusus milik Dzaki
+├── student3-ahmad/      # Modul fitur khusus milik Ahmad
+└── student4_dinda/      # Modul fitur khusus milik Dinda
 ## 👥 Kontributor
 Proyek ini dikembangkan oleh Group 5:
 * Dinda Nurhaliza
