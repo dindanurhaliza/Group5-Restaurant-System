@@ -56,6 +56,7 @@ public class MenuManager {
             app.tambahMenu(202, "ES JERUK",5000);
             app.tambahMenu(203, "KOPI", 6000);
             app.tambahMenu(204, "CENDOL DUREN", 10000);
+            app.tambahMenu(205, "es buah", 8000);
             
 
             app.tampilkanMenu();
