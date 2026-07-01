@@ -15,5 +15,10 @@ public class MenuItem {
     this.price = price;
 
 }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + ", Nama: " + name + ", Harga: " + price;
+    }
 }
 
