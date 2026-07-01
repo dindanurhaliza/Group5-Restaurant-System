@@ -43,7 +43,7 @@ public class MenuCategoryIndexDemo {
         index.listAllKeys();
 
         // --- REMOVE ---
-        index.remove("M002");
+index.remove("M002");
 
         // --- SIZE setelah hapus ---
         System.out.println("Total setelah hapus: " + index.size());
