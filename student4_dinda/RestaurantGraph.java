@@ -135,6 +135,26 @@ public class RestaurantGraph {
         this.vertices = newVertices;
     }
 
+    // PRINTGRAPH ()
+    public void printGraph() {
+        System.out.println("=== Denah Restoran ===");
+        for (int i = 0; i < size; i++) {
+            Vertex v = vertices[i];
+            System.out.print(v.name + " -> [");
+            Node curr = v.adjHead;
+            boolean first = true;
+            while (curr != null) {
+                if (!first) {
+                    System.out.print(", ");
+                }
+                System.out.print(curr.vertexName);
+                first = false;
+                curr = curr.next;
+            }
+            System.out.println("]");
+        }
+    }
+
     public int getSize() {
         return this.size;
     }
