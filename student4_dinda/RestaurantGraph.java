@@ -274,6 +274,41 @@ public class RestaurantGraph {
         }
     }
 
+    // HASPATH (String from, String to)
+    public boolean hasPath(String from, String to) {
+        int fromIndex = getVertexIndex(from);
+        int toIndex = getVertexIndex(to);
+        if (fromIndex == -1 || toIndex == -1) {
+            return false;
+        }
+
+        boolean[] visited = new boolean[size];
+        return hasPathHelper(from, to, visited);
+    }
+
+    private boolean hasPathHelper(String current, String target, boolean[] visited) {
+        if (current.equals(target)) {
+            return true;
+        }
+        int index = getVertexIndex(current);
+        if (index == -1) return false;
+        
+        visited[index] = true;
+
+        Vertex v = vertices[index];
+        Node neighbor = v.adjHead;
+        while (neighbor != null) {
+            int nIndex = getVertexIndex(neighbor.vertexName);
+            if (nIndex != -1 && !visited[nIndex]) {
+                if (hasPathHelper(neighbor.vertexName, target, visited)) {
+                    return true;
+                }
+            }
+            neighbor = neighbor.next;
+        }
+        return false;
+    }
+
     public int getSize() {
         return this.size;
     }
