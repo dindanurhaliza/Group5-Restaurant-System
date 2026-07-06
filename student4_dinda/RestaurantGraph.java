@@ -49,6 +49,92 @@ public class RestaurantGraph {
         this.capacity = DEFAULT_CAPACITY;
     }
 
+    // ADDNODE (String name)
+    public void addNode(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return;
+        }
+        if (findVertex(name) != null) {
+            return; // Meja sudah terdaftar
+        }
+        if (size == capacity) {
+            resize();
+        }
+        vertices[size++] = new Vertex(name);
+    }
+
+    // ADDEDGE (String from, String to)
+    public void addEdge(String from, String to) {
+        if (from == null || to == null) {
+            return;
+        }
+        Vertex vFrom = findVertex(from);
+        Vertex vTo = findVertex(to);
+
+        if (vFrom == null || vTo == null) {
+            return;
+        }
+
+        if (hasDirectEdge(vFrom, to)) {
+            return;
+        }
+
+        appendAdj(vFrom, to);
+        appendAdj(vTo, from);
+    }
+
+    // Helpers
+    private Vertex findVertex(String name) {
+        for (int i = 0; i < size; i++) {
+            if (vertices[i].name.equals(name)) {
+                return vertices[i];
+            }
+        }
+        return null;
+    }
+
+    private int getVertexIndex(String name) {
+        for (int i = 0; i < size; i++) {
+            if (vertices[i].name.equals(name)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private boolean hasDirectEdge(Vertex v, String name) {
+        Node curr = v.adjHead;
+        while (curr != null) {
+            if (curr.vertexName.equals(name)) {
+                return true;
+            }
+            curr = curr.next;
+        }
+        return false;
+    }
+
+    private void appendAdj(Vertex v, String name) {
+        Node newNode = new Node(name);
+        if (v.adjHead == null) {
+            v.adjHead = newNode;
+        } else {
+            Node curr = v.adjHead;
+            while (curr.next != null) {
+                curr = curr.next;
+            }
+            curr.next = newNode;
+        }
+    }
+
+    private void resize() {
+        this.capacity *= 2;
+        Vertex[] newVertices = new Vertex[this.capacity];
+        for (int i = 0; i < size; i++) {
+            newVertices[i] = vertices[i];
+        }
+        this.vertices = newVertices;
+    }
+
     public int getSize() {
         return this.size;
     }
