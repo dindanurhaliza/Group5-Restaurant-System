@@ -48,7 +48,16 @@ public class MenuManager {
 
         }
         }
-        public static void main(String[] agrs) {
+
+ // ===== GETTER UNTUK AKSES DATA (tambahan) =====
+    public MenuItem[] getDaftarMenu() {
+        return daftarMenu;
+    }
+
+    public int getSize() {
+        return size;
+    }
+     public static void main(String[] agrs) {
             MenuManager app = new MenuManager();
             
             app.tambahMenu(101, "NASI GORENG", 20000);
@@ -57,10 +66,22 @@ public class MenuManager {
             app.tambahMenu(203, "KOPI", 6000);
             app.tambahMenu(204, "CENDOL DUREN", 10000);
             app.tambahMenu(205, "es buah", 8000);
+            app.tambahMenu(206, "es trh", 5000);
             
+            System.out.println("sebelum sorting");
 
             app.tampilkanMenu();
-    }
+            MenuItem[] menu = app.getDaftarMenu();
+            int size = app.getSize();
+
+
+            MenuSorter.insertionSortByPrice(menu, size);
+            System.out.println("Sesudah sorting harga");
+            app.tampilkanMenu();
+
+MenuSorter.mergeSortByCategory(menu, size);
+            System.out.println("Sesudah sorting kategory");
+            app.tampilkanMenu();
+///jdhjihwihweyeuwyhyuyriuwyuryweriuqhweuhqwiequwheiuqh vulurukuk
 }
-
-
+}
