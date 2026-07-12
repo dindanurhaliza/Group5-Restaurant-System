@@ -67,6 +67,7 @@ public class MenuManager {
             app.tambahMenu(204, "CENDOL DUREN", 10000);
             app.tambahMenu(205, "es buah", 8000);
             app.tambahMenu(206, "es trh", 5000);
+            app.tambahMenu(207, "es jeruk", 7000);
             
             System.out.println("sebelum sorting");
 
