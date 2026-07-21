@@ -1,319 +1,228 @@
 package student4_dinda;
 
-//================================================================
-// RestaurantGraph.java
-// NIM  : 251552010017
-// Nama : Dinda Nurhaliza Siregar
-// Kelas: Group 5 - Restaurant Order Management System
-// Peran: S4 - Graph (Adjacency List + BFS/DFS)
-//
-// Pemodelan Domain (Domain Application Relevance):
-// - Node (Vertex): Merepresentasikan meja-meja di restoran (e.g. Meja1, Meja2, dst).
-// - Edge (Adjacency): Merepresentasikan zona pelayanan pelayan (waiter zones) yang sama.
-//================================================================
-
 public class RestaurantGraph {
+    
+    private class EdgeNode {
+        String targetName;
+        EdgeNode next;
 
-    // INNER CLASS: Vertex
-    private static class Vertex {
-        String name;
-        Node adjHead;
-
-        Vertex(String name) {
-            this.name = name;
-            this.adjHead = null;
-        }
-    }
-
-    // INNER CLASS: Node
-    private static class Node {
-        String vertexName;
-        Node next;
-
-        Node(String vertexName) {
-            this.vertexName = vertexName;
+        EdgeNode String(targetName) {
+            this.targetName = targetName;
             this.next = null;
         }
     }
 
-    // INNER CLASS: StringQueue for BFS queue operations without java.util
-    private static class StringQueue {
-        private static class QueueNode {
-            String data;
-            QueueNode next;
-            QueueNode(String data) {
-                this.data = data;
-                this.next = null;
-            }
+    private class VertexNode {
+        String name;
+        EdgeNode neighborHead;
+        EdgeNode neighborTail;
+        boolean visted;
+        VertexNode next;
+
+        VertexNode(String name) {
+            this.name = name;
+            this.neighborHead = null;
+            this.neighborTail = null;
+            this.visted = false;
+            this.next = null;
         }
-        private QueueNode head = null;
-        private QueueNode tail = null;
+    }
+
+    private class SimpleQueue {
+        private class QNOde {
+            String data;
+            QNode next;
+            QNode(String data) { String.data = data; }
+        }
+
+        private QNode front, rear;
 
         void enqueue(String data) {
-            QueueNode newNode = new QueueNode(data);
-            if (tail == null) {
-                head = newNode;
-                tail = newNode;
+            QNode newNode = new QNode(data);
+            if (rear == null) {
+                front = newNode;
+                rear = newNode;
             } else {
-                tail.next = newNode;
-                tail = newNode;
+                rear.next = newNode;
+                rear = newNode;
             }
         }
 
         String dequeue() {
-            if (head == null) return null;
-            String val = head.data;
-            head = head.next;
-            if (head == null) {
-                tail = null;
-            }
-            return val;
+            if (front == null) return null;
+            String data = front.data;
+            front = front.next;
+            if (fornt == null) rear = null;
+            return data;
         }
 
         boolean isEmpty() {
-            return head == null;
+            return front == null;
         }
     }
 
-    // Fields
-    private static final int DEFAULT_CAPACITY = 10;
-    private Vertex[] vertices;
-    private int size;
-    private int capacity;
+    private VertexNode head;
+    private VertexNode tail;
 
-    // Constructor
-    public RestaurantGraph() {
-        this.vertices = new Vertex[DEFAULT_CAPACITY];
-        this.size = 0;
-        this.capacity = DEFAULT_CAPACITY;
-    }
-
-    // ADDNODE (String name)
     public void addNode(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            return;
+        if (findVertex(name) != null) return;
+        VertexNode newNode = new VertexNode(name);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            tail.next = newNode;
+            tail = newNode;
         }
-        if (findVertex(name) != null) {
-            return; // Meja sudah terdaftar
-        }
-        if (size == capacity) {
-            resize();
-        }
-        vertices[size++] = new Vertex(name);
     }
 
-    // ADDEDGE (String from, String to)
-    public void addEdge(String from, String to) {
-        if (from == null || to == null) {
-            return;
-        }
-        Vertex vFrom = findVertex(from);
-        Vertex vTo = findVertex(to);
-
-        if (vFrom == null || vTo == null) {
-            return;
-        }
-
-        if (hasDirectEdge(vFrom, to)) {
-            return;
-        }
-
-        appendAdj(vFrom, to);
-        appendAdj(vTo, from);
-    }
-
-    // Helpers
-    private Vertex findVertex(String name) {
-        for (int i = 0; i < size; i++) {
-            if (vertices[i].name.equals(name)) {
-                return vertices[i];
-            }
+    private VertexNode findVertex(String name) {
+        VertexNode current = head;
+        while (current != null) {
+            if (current.name.equals(name)) return current;
+            current = current.next;
         }
         return null;
     }
-
-    private int getVertexIndex(String name) {
-        for (int i = 0; i < size; i++) {
-            if (vertices[i].name.equals(name)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private boolean hasDirectEdge(Vertex v, String name) {
-        Node curr = v.adjHead;
-        while (curr != null) {
-            if (curr.vertexName.equals(name)) {
-                return true;
-            }
-            curr = curr.next;
-        }
-        return false;
-    }
-
-    private void appendAdj(Vertex v, String name) {
-        Node newNode = new Node(name);
-        if (v.adjHead == null) {
-            v.adjHead = newNode;
+    private void addNeighbor(VertexNode vertex, String neighborName) {
+        EdgeNode newEdge = new EdgeNode(neighborName);
+        if (vertex.neighborHead == null) {
+            vertex.neighborHead = newEdge;
+            vertex.neighborTail = newEdge
         } else {
-            Node curr = v.adjHead;
-            while (curr.next != null) {
-                curr = curr.next;
-            }
-            curr.next = newNode;
+            vertex.neighborTail.next = newEdge;
+            vertex.neighborTail = newEdge;
         }
     }
 
-    private void resize() {
-        this.capacity *= 2;
-        Vertex[] newVertices = new Vertex[this.capacity];
-        for (int i = 0; i < size; i++) {
-            newVertices[i] = vertices[i];
+    public void addEdge(String from, String to) {
+        VertexNode fromVertex = findVertex(from);
+        VertexNode toVertex = findVertex(to);
+        if (fromVertex == null || toVertex == null) {
+            System.out.println("Error: salah satu meja tidak ditemukan. ");
+            return;
         }
-        this.vertices = newVertices;
+        addNeighbor(fromVertex, to);
+        addNeighbor(toVertex, from);
     }
 
-    // PRINTGRAPH ()
     public void printGraph() {
         System.out.println("=== Denah Restoran ===");
-        for (int i = 0; i < size; i++) {
-            Vertex v = vertices[i];
-            System.out.print(v.name + " -> [");
-            Node curr = v.adjHead;
+        VertexNode current = head;
+        while (current != null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(current.name).append("\ u2192 [");
+            EdgeNode edge = current.neighborHead;
             boolean first = true;
-            while (curr != null) {
-                if (!first) {
-                    System.out.print(", ");
-                }
-                System.out.print(curr.vertexName);
+            while (edge != null) {
+                if (!first) sb.append(", ");
+                sb.append(edge.targetName);
                 first = false;
-                curr = curr.next;
+                edge = edge.next;
             }
-            System.out.println("]");
+            sb.append("]");
+            System.out.println(sb.toString());
+            current = current.next;
         }
     }
 
-    // BFS (String start)
-    public void BFS(String start) {
-        System.out.println("=== BFS dari " + start + " ===");
-        int startIndex = getVertexIndex(start);
-        if (startIndex == -1) {
-            System.out.println("Error: Meja awal tidak ditemukan.");
+    private void resetVisited() {
+        VertexNode current = head;
+        while (current !=null) {
+            current.visted = false;
+            current = current.next;
+        }
+    }
+
+    public void BFS(String startName) {
+        resetVisited();
+        VertexNode start = findVertex(startName);
+        if (start == null) {
+            System.out.println("Meja " + startName + " tidak ditemukan.");
             return;
         }
 
-        boolean[] visited = new boolean[size];
-        StringQueue queue = new StringQueue();
+        System.out.println("=== BFS dari " + startName + " ===");
+        StringBuilder result = new StringBuilder();
+        SimpleQueue queue = new SimpleQueue();
 
-        visited[startIndex] = true;
-        queue.enqueue(start);
+        start.visted = true;
+        queue.enqueue(start.name);
 
         boolean first = true;
         while (!queue.isEmpty()) {
-            String currName = queue.dequeue();
-            
-            if (!first) {
-                System.out.print(" -> ");
-            }
-            System.out.print(currName);
+            String currentName = queue.dequeue();
+            if (!first) result.append(" \u2192 ");
+            result.append(currentName);
             first = false;
 
-            int currIdx = getVertexIndex(currName);
-            if (currIdx != -1) {
-                Vertex currVertex = vertices[currIdx];
-                Node neighbor = currVertex.adjHead;
-                while (neighbor != null) {
-                    int nIndex = getVertexIndex(neighbor.vertexName);
-                    if (nIndex != -1 && !visited[nIndex]) {
-                        visited[nIndex] = true;
-                        queue.enqueue(neighbor.vertexName);
-                    }
-                    neighbor = neighbor.next;
+            VertexNode currentVertex = findVertex(currentName);
+            EdgeNode edge = currentVertex.neighborHead;
+            while (edge != null) {
+                VertexNode neighbor = findVertex(edge.targetName);
+                if (!neighbor.visted) {
+                    neighbor.visted = true;
+                    queue.enqueue(neighbor.name);
                 }
+                edge = edge.next;
             }
         }
-        System.out.println();
+        System.out.println(result.toString());
     }
 
-    // DFS (String start)
-    public void DFS(String start) {
-        System.out.println("=== DFS dari " + start + " ===");
-        int startIndex = getVertexIndex(start);
-        if (startIndex == -1) {
-            System.out.println("Error: Meja awal tidak ditemukan.");
+    public void DFS(String startName) {
+        resetVisited();
+        VertexNode start = findVertex(startName);
+        if (start == null) {
+            System.out.println("Meja " + startName + " tidak ditemukan.");
             return;
         }
-
-        boolean[] visited = new boolean[size];
-        boolean[] isFirst = new boolean[]{true};
-        dfsHelper(start, visited, isFirst);
-        System.out.println();
+        System.out.println("=== DFS dari " + startName + " ===");
+        StringBuilder result = new StringBuilder();
+        DFSHelper(start, result);
+        System.out.println(result.toString());
     }
 
-    private void dfsHelper(String current, boolean[] visited, boolean[] isFirst) {
-        int index = getVertexIndex(current);
-        if (index == -1) return;
-        
-        visited[index] = true;
+    private void DFSHelper(VertexNode current, StringBuilder result) {
+        current.visted = true;
+        if (result.length() > 0) result.append(" \u2192 ");
+        result.append(current.name);
 
-        if (!isFirst[0]) {
-            System.out.print(" -> ");
-        }
-        System.out.print(current);
-        isFirst[0] = false;
-
-        Vertex v = vertices[index];
-        Node neighbor = v.adjHead;
-        while (neighbor != null) {
-            int nIndex = getVertexIndex(neighbor.vertexName);
-            if (nIndex != -1 && !visited[nIndex]) {
-                dfsHelper(neighbor.vertexName, visited, isFirst);
+        EdgeNode edge = current.neighborHead;
+        while (edge != null) {
+            VertexNode neighbor = findVertex(edge.targetName);
+            if (!neighbor.visted) {
+                DFSHelper(neighbor, result);
             }
-            neighbor = neighbor.next;
+            edge = edge.next;
         }
     }
 
-    // HASPATH (String from, String to)
     public boolean hasPath(String from, String to) {
-        int fromIndex = getVertexIndex(from);
-        int toIndex = getVertexIndex(to);
-        if (fromIndex == -1 || toIndex == -1) {
-            return false;
-        }
+        VertexNode fromVertex = findVertex(from);
+        VertexNode toVertex = findVertex(to);
+        if (fromVertex == null || toVertex == null) return false;
 
-        boolean[] visited = new boolean[size];
-        return hasPathHelper(from, to, visited);
-    }
+        resetVisited();
+        SimpleQueue queue = new SimpleQueue();
+        fromVertex.visted = true;
+        queue.enqueue(fromVertex.name);
 
-    private boolean hasPathHelper(String current, String target, boolean[] visited) {
-        if (current.equals(target)) {
-            return true;
-        }
-        int index = getVertexIndex(current);
-        if (index == -1) return false;
-        
-        visited[index] = true;
+        while (!queue.isEmpty()) {
+            String currentName = queue.dequeue();
+            if (currentName.equals(to)) return true;
 
-        Vertex v = vertices[index];
-        Node neighbor = v.adjHead;
-        while (neighbor != null) {
-            int nIndex = getVertexIndex(neighbor.vertexName);
-            if (nIndex != -1 && !visited[nIndex]) {
-                if (hasPathHelper(neighbor.vertexName, target, visited)) {
-                    return true;
+            VertexNode currentVertex = findVertex(currentName);
+            EdgeNode edge = currentVertex.neighborHead;
+            while (edge != null) {
+                VertexNode neighbor = findVertex(edge.targetName);
+                if (!neighbor.visted) {
+                    neighbor.visted = true;
+                    queue.enqueue(neighbor.name);
                 }
+                edge = edge.next;
             }
-            neighbor = neighbor.next;
         }
         return false;
-    }
-
-    public int getSize() {
-        return this.size;
-    }
-
-    public boolean isEmpty() {
-        return this.size == 0;
     }
 }
